@@ -118,6 +118,13 @@ statement");
     fixed_print_country(&fixed_country); // Allowed because borrowed
     // borrow cheacker guarantees that while references exist, an object cannot be destroyed
 
+    let mut string = String::from("Hello");
+    add_world(&mut string);
+    println!("{}", string);
+
+    // fn name(x: String)  takes a string and owns it
+    // fn name(x: &String)  takes a string and borrows it
+    // fn name(x: &mut String)  takes a string and borrows it and can change it
 }
 
 fn fixed_print_country(country_name: &String) {
@@ -130,4 +137,8 @@ fn print_country(country_name: String) {
 
 fn print_test(test: &str) {
     println!("{}", test);
+}
+
+fn add_world(text: &mut String) {
+    text.push_str(" world");
 }
