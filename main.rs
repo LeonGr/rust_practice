@@ -23,10 +23,10 @@ line
 statement");
 
     println!(r#"this is a "raw" string "#);
-    println!(r##"this is a "#raw" string "##);
-    println!(r###"this is a "##raw" string "###);
-    println!(r####"this is a "###raw" string "####);
-    println!(r#####"this is a "####raw" string "#####);
+    //println!(r##"this is a "#raw" string "##);
+    //println!(r###"this is a "##raw" string "###);
+    //println!(r####"this is a "###raw" string "####);
+    //println!(r#####"this is a "####raw" string "#####);
 
     let var = 12;
     let r#ref = &var; // special word ref used as variable name
@@ -57,12 +57,12 @@ statement");
 
 
     // std::mem::size_of::<Type>() gives you the size in bytes of a type
-    println!("A String is always {:?} bytes. It is Sized.", std::mem::size_of::<String>());
-    println!("And an i8 is always {:?} bytes. It is Sized.", std::mem::size_of::<i8>());
-    println!("And an f64 is always {:?} bytes. It is Sized.", std::mem::size_of::<f64>());
+    //println!("A String is always {:?} bytes. It is Sized.", std::mem::size_of::<String>());
+    //println!("And an i8 is always {:?} bytes. It is Sized.", std::mem::size_of::<i8>());
+    //println!("And an f64 is always {:?} bytes. It is Sized.", std::mem::size_of::<f64>());
     // std::mem::size_of_val() gives you the size in bytes of a variable
-    println!("But a &str? It can be anything. '서태지' is {:?} bytes. It is not Sized.", std::mem::size_of_val("서태지"));
-    println!("And 'Adrian Fahrenheit Țepeș' is {:?} bytes. It is not Sized.", std::mem::size_of_val("Adrian Fahrenheit Țepeș"));
+    //println!("But a &str? It can be anything. '서태지' is {:?} bytes. It is not Sized.", std::mem::size_of_val("서태지"));
+    //println!("And 'Adrian Fahrenheit Țepeș' is {:?} bytes. It is not Sized.", std::mem::size_of_val("Adrian Fahrenheit Țepeș"));
 
     const CONSTANT: &str = "Constant";
     static STATIC: &str = "Static"; // With fixed memory location
@@ -107,6 +107,7 @@ statement");
     let other_country: String = String::from("Netherlands");
     print_country(other_country);
     //print_country(other_country);  // Not allowed
+    //print_country(other_country.clone());  // Allowed, see Copy Types
 
     let test = "Hello";
     print_test(test);
@@ -125,6 +126,60 @@ statement");
     // fn name(x: String)  takes a string and owns it
     // fn name(x: &String)  takes a string and borrows it
     // fn name(x: &mut String)  takes a string and borrows it and can change it
+
+    /* Copy Types */
+    // simple types on the stack, compiler knows size
+
+    // Rust documentation: Trait Implementations
+    // If 'Copy' implemented the value is copied when sent to a function
+
+    let number = 8; // copy implemented
+    print_number(number);
+    print_number(number);
+
+    let country = String::from("Belgium");
+    print_country(country.clone()); // Need clone because String doesn't implement Copy
+    print_country(country);
+
+    // Clone can use a lot of memory, so a reference is faster
+
+    // Variables without values (uninitialized)
+    let my_var;
+
+    {
+        my_var = 50;
+    }
+
+    println!("{}", my_var);
+
+    /* Collection types */
+
+    // Arrays (fixed size, single type) very fast
+    let array = [1, 2, 3, 4];
+    //let () = array; // to test for type let compiler fail
+
+    let aaa = ["a"; 3]; // declaring array with same value
+    println!("{:?}", aaa);
+
+    // let mut buffer = [0; 640]; // buffer example
+
+    // Array slicing:
+    let first_two = &array[0..2]; // Exclusive
+    let also_first_two = &array[0..=1]; // Inclusive
+    let another_first_two = &array[..2];
+
+    println!("{:?}", first_two);
+    println!("{:?}", also_first_two);
+    println!("{:?}", another_first_two);
+
+    // &array[..] is everything
+
+    /* Vectors */
+}
+
+fn print_number(mut number: i32) {
+    number += 1;
+    println!("{}", number);
 }
 
 fn fixed_print_country(country_name: &String) {
