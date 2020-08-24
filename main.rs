@@ -1,214 +1,126 @@
 fn main() {
-    let test = {};
-    println!("{}", 10); // Display print
-    println!("{:?}", test); // Debug print (also {:#?})
+    /* Structs */
 
-    println!("{}", std::i8::MIN + std::i8::MAX);
+    // Create your own type
+    // 3 options:
 
-    let mut number = 10;
-    println!("{}", number);
-    number = 5;
-    println!("{}", number);
-    let number = 8; // Duplicate declaration (shadowing)
+    // Unit struct (no body)
+    //struct Struct;
 
-    println!("{}", number);
+    // Tuple struct (only types)
+    //struct IntTriple(u8, u8, u8);
 
-    let variable = 10; // pointer reference
-    let reference = &variable;
-
-    println!("{}", reference);
-
-    println!("multi
-line
-statement");
-
-    println!(r#"this is a "raw" string "#);
-    //println!(r##"this is a "#raw" string "##);
-    //println!(r###"this is a "##raw" string "###);
-    //println!(r####"this is a "###raw" string "####);
-    //println!(r#####"this is a "####raw" string "#####);
-
-    let var = 12;
-    let r#ref = &var; // special word ref used as variable name
-    println!("{}", r#ref);
-
-    println!("{:?}", b"byte string");
-    println!("{:?}", br#"raw byte string"#);
-
-
-    println!("{:p}", reference); // print reference pointer address
-
-    println!("{:b}, {:x}, {:o}", var, var, var); // Different bases
-
-    println!("different orders: {1} {0} {2}", 1, 0 ,2);
-
-    println!("{name}", name="test");
-
-    // String vs &str
-    let simple_string: &str = "Hello there"; // dynamically sized, fast
-    let complicated_string: String = "General Kenobi".to_string(); // more functions, slower, pointer with data on heap
-    let different_declaration = String::from("aaaa");
-    let another_declaration: String = format!("{}", "text");
-    let last_declaration: String = "make me a String".into();
-
-    println!("{} {}", simple_string, complicated_string);
-
-    println!("{} {} {}", different_declaration, another_declaration, last_declaration);
-
-
-    // std::mem::size_of::<Type>() gives you the size in bytes of a type
-    //println!("A String is always {:?} bytes. It is Sized.", std::mem::size_of::<String>());
-    //println!("And an i8 is always {:?} bytes. It is Sized.", std::mem::size_of::<i8>());
-    //println!("And an f64 is always {:?} bytes. It is Sized.", std::mem::size_of::<f64>());
-    // std::mem::size_of_val() gives you the size in bytes of a variable
-    //println!("But a &str? It can be anything. '서태지' is {:?} bytes. It is not Sized.", std::mem::size_of_val("서태지"));
-    //println!("And 'Adrian Fahrenheit Țepeș' is {:?} bytes. It is not Sized.", std::mem::size_of_val("Adrian Fahrenheit Țepeș"));
-
-    const CONSTANT: &str = "Constant";
-    static STATIC: &str = "Static"; // With fixed memory location
-
-    println!("{} {}", CONSTANT, STATIC);
-
-
-    // you can't have a reference to a variable that's not in memory:
-    /*
-    let error = {
-        let source = "a";
-        let reference = &source;
-        reference
-    };
-
-    &source >> borrowed value does not live long enough
-    */
-
-    let mut mutable_num = 8;
-    //let nonmutable_ref = &mutable_num; // Not Allowed
-    let mutable_ref = &mut mutable_num; // mutable reference
-    *mutable_ref = 10; // & is referencing and * is dereferencing
-
-    //println!("{}", nonmutable_ref);
-
-    // Rules:
-    // 1 - can have as many immutable references as you want
-    // 2 - if you have a mutable reference that's it, you can't also have an immutable one
-
-    // Shadowing & referencing:
-    let country = String::from("Austria");
-    let country_ref = &country;
-    let country = 8;
-    println!("{}, {}", country_ref, country); // "Austria, 8" because the original country still  exists
-
-
-    // Giving references to functions: a variable can only have one owner
-    // This is because variables are in charge of freeing their own resources
-    // when doing variable assignments or passing function arguments by value,
-    // the ownership of the resources is transferred, a "move" in rust
-    // After a move the previous owner can no longer be used to avoid dangling pointers
-    let other_country: String = String::from("Netherlands");
-    print_country(other_country);
-    //print_country(other_country);  // Not allowed
-    //print_country(other_country.clone());  // Allowed, see Copy Types
-
-    let test = "Hello";
-    print_test(test);
-    print_test(test); // Allowed because not a reference
-
-
-    let fixed_country: String = String::from("Austria");
-    fixed_print_country(&fixed_country);
-    fixed_print_country(&fixed_country); // Allowed because borrowed
-    // borrow cheacker guarantees that while references exist, an object cannot be destroyed
-
-    let mut string = String::from("Hello");
-    add_world(&mut string);
-    println!("{}", string);
-
-    // fn name(x: String)  takes a string and owns it
-    // fn name(x: &String)  takes a string and borrows it
-    // fn name(x: &mut String)  takes a string and borrows it and can change it
-
-    /* Copy Types */
-    // simple types on the stack, compiler knows size
-
-    // Rust documentation: Trait Implementations
-    // If 'Copy' implemented the value is copied when sent to a function
-
-    let number = 8; // copy implemented
-    print_number(number);
-    print_number(number);
-
-    let country = String::from("Belgium");
-    print_country(country.clone()); // Need clone because String doesn't implement Copy
-    print_country(country);
-
-    // Clone can use a lot of memory, so a reference is faster
-
-    // Variables without values (uninitialized)
-    let my_var;
-
-    {
-        my_var = 50;
+    // Named Struct (variable names with types)
+    struct ColourRGB {
+        red: u8,
+        green: u8,
+        blue: u8,
     }
 
-    println!("{}", my_var);
 
-    /* Collection types */
+    let magenta = ColourRGB {
+        red: 255,
+        green: 0,
+        blue: 255,
+    };
 
-    /* Arrays (fixed size, single type) very fast */
-    let array = [1, 2, 3, 4];
-    //let () = array; // to test for type let compiler fail
+    println!("Magenta RGB: {} {} {}", magenta.red, magenta.green, magenta.blue);
 
-    let aaa = ["a"; 3]; // declaring array with same value
-    println!("{:?}", aaa);
+    // Can also create with variables of same names:
+    let (red, green, blue) = (100, 100, 100);
+    let grey = ColourRGB {
+        red,
+        green,
+        blue,
+    };
 
-    // let mut buffer = [0; 640]; // buffer example
+    println!("Grey RGB: {} {} {}", grey.red, grey.green, grey.blue);
 
-    // Array slicing:
-    let first_two = &array[0..2]; // Exclusive
-    let also_first_two = &array[0..=1]; // Inclusive
-    let another_first_two = &array[..2];
+    /* Enums */
 
-    println!("{:?}", first_two);
-    println!("{:?}", also_first_two);
-    println!("{:?}", another_first_two);
+    // For holding choices
+    enum Directions {
+        North,
+        East,
+        South,
+        West,
+    }
 
-    // &array[..] is everything
+    let north_pole_location = Directions::North;
+    let _east_pole_location = Directions::East;
+    let _south_pole_location = Directions::South;
+    let _west_pole_location = Directions::West;
 
-    /* Vectors */
-    let mut my_vec = Vec::new(); // Compiler still needs to know the type
-    // Or
-    // let mut my_vec: Vec<String> = Vec::new();
+    match north_pole_location {
+        Directions::North => println!("It's in the north!"),
+        Directions::East => println!("It's in the east!"),
+        Directions::South => println!("It's in the south!"),
+        Directions::West => println!("It's in the west!"),
+    }
 
-    my_vec.push(String::from("String"));
+    // Can also turn it into an integer (only if it doesn't have other data like North(String))
+    println!("{}", Directions::North as u32);
 
-    // Capacity doubled when you add more than its original capacity
+    // You can give it different integers than default too: enum Dir { North = 100 };
 
-    let mut my_int_vec: Vec<i32> = vec![7, 8, 9]; // capacity 3
-    my_int_vec.push(10); // now capacity 6
+    // Can use enums to create a thing with multiple possible types:
+    enum Number {
+        U32(u32),
+        I32(i32),
+    }
 
-    println!("{}", my_int_vec.capacity());
+    impl Number {
+        fn new(number: i32) -> Number {
+            match number.is_positive() {
+                true => Number::U32(number as u32),
+                false => Number::I32(number),
+            }
+        }
+    }
 
-    // Faster, setting capacity at the start:
-    let mut another_vec: Vec<i32> = Vec::with_capacity(8);
-}
+    let number = Number::new(100);
 
-fn print_number(mut number: i32) {
-    number += 1;
-    println!("{}", number);
-}
+    match number {
+        Number::I32(number) => println!("i32: {}", number),
+        Number::U32(number) => println!("u32: {}", number),
+    }
 
-fn fixed_print_country(country_name: &String) {
-    println!("{}", country_name);
-}
+    /* Destructuring */
+    // Getting values from a struct or enum by using 'let' backwards
 
-fn print_country(country_name: String) {
-    println!("{}", country_name);
-}
+    let ColourRGB { red: r, green: g, blue: b } = magenta;
 
-fn print_test(test: &str) {
-    println!("{}", test);
-}
+    println!("{} {} {}", r, g, b);
 
-fn add_world(text: &mut String) {
-    text.push_str(" world");
+    /* Loops */
+
+    // Infinite loop
+    //loop {
+
+    //}
+
+    // You can give nested loops a name:
+    let mut counter = 0;
+    'loop1: loop {
+        loop {
+            counter += 1;
+            if counter == 10 {
+                break 'loop1;
+            }
+        }
+    }
+
+    // there are also while loops
+
+    // Ranges with .. or ..=
+    for i in 0..10 { // can use _ if you don't need counter variable
+        print!("{} ", i);
+    }
+
+    println!();
+
+    // There is also for X in
+    for i in vec![0, 1, 2, 3] {
+        print!("{:?} ", i);
+    }
 }
