@@ -154,7 +154,7 @@ statement");
 
     /* Collection types */
 
-    // Arrays (fixed size, single type) very fast
+    /* Arrays (fixed size, single type) very fast */
     let array = [1, 2, 3, 4];
     //let () = array; // to test for type let compiler fail
 
@@ -175,6 +175,21 @@ statement");
     // &array[..] is everything
 
     /* Vectors */
+    let mut my_vec = Vec::new(); // Compiler still needs to know the type
+    // Or
+    // let mut my_vec: Vec<String> = Vec::new();
+
+    my_vec.push(String::from("String"));
+
+    // Capacity doubled when you add more than its original capacity
+
+    let mut my_int_vec: Vec<i32> = vec![7, 8, 9]; // capacity 3
+    my_int_vec.push(10); // now capacity 6
+
+    println!("{}", my_int_vec.capacity());
+
+    // Faster, setting capacity at the start:
+    let mut another_vec: Vec<i32> = Vec::with_capacity(8);
 }
 
 fn print_number(mut number: i32) {
