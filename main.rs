@@ -194,7 +194,7 @@ fn main() {
     hash_map.insert("Hello", "World");
     hash_map.insert("int", "test");
 
-    println!("{:?}", hash_map.get("Hello"));
+    println!("{:?}", hash_map.get("Hello")); // .get returns Option
 
     // Create HashMap from vector of tuples
     let tuple_vector = vec![("Test", "1"), ("test", "2")];
@@ -231,5 +231,84 @@ fn main() {
     println!("{:?}", heap.peek()); // -> None
 
     /* VecDeque */
-    // A Vec that's good with pop() to remove the last element and remove() to remove the first element
+    // On a normal Vec you use pop() to remove the last element and remove() to remove the first element
+    // has push_front(), push_back(), pop_front(), pop_back()
+
+
+    /* Generics */
+    // Denoted by <T> where T can be anything, usually T, U, V.
+
+    return_generic(5);
+    return_generic(&hash_from_vector);
+
+    // Sometimes you need the generic to implement a certain Trait
+    // Then you can use <T: Trait>
+    // Use <T: Trait1 + Trait2> if more are required
+
+    print_debug(5);
+    print_debug(&hash_from_vector);
+    print_debug(&new_animal);
+
+    // Can also use where notation (especially for more generics):
+
+    /*
+    fn print_debug<T>(generic: T)
+    where
+        T: Debug,
+        ...
+    {
+        ...
+    }
+    */
+
+
+    /* Option and Result */
+    // Used to make code safer
+
+    /* Option */
+    // Used when you have a value that might exist.
+    // Option<T> means Some(i32) if it's there, None otherwise.
+
+    let new_vec = vec![1, 2];
+    println!("{:?}", take_fifth(new_vec));
+
+    let longer_vec = vec![1, 2, 3, 4, 5, 6];
+    println!("{:?}", take_fifth(longer_vec));
+
+    // You can get the value from Some() with unwrap()
+    // To prevent panic by unwrapping None you can use a match with None/Some(x)
+    // Or just use .is_some() on the returned value
+
+    /* Result */
+    // Ok/Err instead of Some/None
+    // Can't unwrap Err
+    // fn function() -> Result<T, E> { if this Ok(...) else Err(...) }
+
+    let new_vec = vec![0, 1];
+    //let new_vec = vec![0, 1, 2, 3, 4, 5];
+
+    // Can use if let "do something if match"
+    if let Some(number) = new_vec.get(5) {
+        println!("Got {}", number);
+    } else {
+        println!("Got nothing");
+    }
+}
+
+fn take_fifth(vec: Vec<i32>) -> Option<i32> {
+    if vec.len() < 5 {
+        None
+    } else {
+        Some(vec[5])
+    }
+}
+
+use std::fmt::Debug;
+fn print_debug<T: Debug>(generic: T) {
+    println!("Here's your T: {:#?}", generic);
+}
+
+fn return_generic<T>(generic: T) -> T {
+    println!("Here's your T");
+    generic
 }
