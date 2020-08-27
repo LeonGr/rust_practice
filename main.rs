@@ -293,7 +293,94 @@ fn main() {
     } else {
         println!("Got nothing");
     }
+
+    /* the ? operator */
+    // can place it after a function that returns a result (in a Result/Option function)
+    println!("{:?}", parse_str("10.0"));
+
+
+    /* panic and assert */
+    // panic!()         will stop program
+    // assert!(x)       will panic if !x
+    // assert_eq!(x, y) will panic if x != y
+    // assert_ne!(x, y) will panic if x == y
+    // these last 3 also take a custom message as argument
+
+
+    /* Traits */
+    // something a struct can do, added with impl
+    trait Dog {
+        fn bark(&self) {
+            println!("Woof!");
+        }
+    }
+
+    impl Dog for Animal {};
+
+    let dog = Animal {
+        age: 3,
+        animal_type: AnimalType::Dog,
+    };
+    dog.bark();
+
+    // Can also do this without writing the whole function
+    trait Cat {
+        fn meow(&self);
+    }
+
+    impl Cat for Animal {
+        fn meow(&self) {
+            println!("Meow!");
+        }
+    }
+
+    let cat = Animal::new();
+    cat.meow();
+
+
+    /* The From trait */
+    /*
+    impl From<T> for U {
+        fn from(x: T) -> Self {
+            Self { ... }
+        }
+    }
+    */
+
+
+    /* Chaining methods */
+
+    // .collect() can make collections
+    let new_vec = (1..=10).collect::<Vec<i32>>(); // vec with [1, 10]
+
+    let another_vec = new_vec
+        .into_iter()
+        .skip(3)
+        .take(4)
+        .collect::<Vec<i32>>();
+
+    println!("{:?}", another_vec);
+
+
+    /* Iterators */
+    // A collection that can give you the items in the collection one at a time
+    // iter() iterator of references
+    // iter_mut() iterator of mutable references
+    // into_iter() iterator of values (no reference so takes ownership)
+
+    // Works by using .next() -> Option. if Some it continues, of None it stops
+
+    // Can impletement Iterator trait.
+    // Needs:
+    // - type Item = T; (associated type)
+    // - fn next(&mut self) -> Option<Self::Item> (implement method)
 }
+
+fn parse_str(input: &str) -> Result<i32, std::num::ParseIntError> {
+    let parsed_number = input.parse::<i32>()?;
+    Ok(parsed_number)
+}
+
 
 fn take_fifth(vec: Vec<i32>) -> Option<i32> {
     if vec.len() < 5 {
