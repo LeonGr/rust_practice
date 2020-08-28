@@ -374,6 +374,97 @@ fn main() {
     // Needs:
     // - type Item = T; (associated type)
     // - fn next(&mut self) -> Option<Self::Item> (implement method)
+
+
+    /* Closures */
+    // like quick functions without a name, sometimes called lambda
+    // denoted with ||
+     let doubler = |x: i32| x * 2;
+
+     assert_eq!(doubler(5), 10);
+
+     // Can also add code blocks:
+     /*
+     let closure = || {
+
+     }
+     */
+
+     // Counter example
+     let make_counter = || {
+         let mut counter = 0;
+         return move || {
+             counter += 1;
+             counter
+         }
+     };
+
+     let mut x = make_counter();
+
+     assert_eq!(x(), 1);
+     assert_eq!(x(), 2);
+
+
+     /* Helpful methods for closures and iterators */
+
+     // often used with .map()
+     // also with .for_each(), for example after .enumerate() -> (index, item)
+     let num_vec: Vec<i32> = (0..10).collect();
+
+     num_vec
+         .iter()
+         .enumerate()
+         .for_each(|(index, item)| println!("{}: {}", index, item));
+
+     // .filter(f: F) takes a function and keeps items in an iterator if true
+     // .filter_map(f: F) closure must return Option, then only Some() results are kept
+     // .ok() turns Result into Option, Err is discarded
+     // .ok_or(err: E) turns Option into Result, maps Some() to Ok() and None to Err(err)
+     // .ok_or_else(err: F) does the same but instead takes a closure for more advanced errors
+     // .and_then(f: F) -> Option takes an option and applies closure to it if its input is an option
+     // .and(optb: Option<U>) -> takes 2 Options and returns the second if both are Some()
+     // .any() takes iterator and returns true if closure returns true for any item
+     // .all() same as any() but for all items
+     // .rev() reverses an iterator (reverse() for vec)
+     // .find(f: F) returns Option with Some(item) if it was found
+     // .positition(f: F) returns Option with Some(index) if it was found
+         // .contains() returns true of item is found in vec (not iterator!)
+     // .chunks(size) will give slices of given size + whatever is left with unique items
+        // [1, 2, 3, 4] -> [[1, 2, 3], [4]]
+     // .windows(size) will give slices of given size shifted by 1 each time
+        // [1, 2, 3, 4] -> [[1, 2, 3], [2, 3, 4]]
+
+
+     /* the dbg! macro and .inspect */
+
+     // dbg!() prints info about its content
+     // .inspect is similar but for iterators
+
+
+     /* Types of &str */
+     let string_literal: &'static str = "test"; // last for whole program = static lifetime
+     let borrowed_str: &str = &String::from("test"); // regular &str
+     println!("{} {}", string_literal, borrowed_str);
+
+
+     /* Lifetimes */
+     // how long a variable lives, only relevant for references
+     // instead of static you can also create your own lifetime
+     // usually 'a, 'b, 'c
+
+     #[derive(Debug)]
+     struct City<'a> {
+         name: &'a str,
+     }
+
+     let city_name = String::from("Amersfoort");
+     let amersfoort = City {
+         name: &city_name,
+     };
+
+     println!("{:?}", amersfoort);
+
+     // <'_> is the anonymous lifetime.
 }
 
 fn parse_str(input: &str) -> Result<i32, std::num::ParseIntError> {
