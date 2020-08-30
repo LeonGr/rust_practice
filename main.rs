@@ -281,7 +281,7 @@ fn main() {
 
     /* Result */
     // Ok/Err instead of Some/None
-    // Can't unwrap Err
+    // can unwrap Ok, Can't unwrap Err
     // fn function() -> Result<T, E> { if this Ok(...) else Err(...) }
 
     let new_vec = vec![0, 1];
@@ -465,6 +465,92 @@ fn main() {
      println!("{:?}", amersfoort);
 
      // <'_> is the anonymous lifetime.
+
+
+     /* Interior mutability */
+
+     // ways to change values inside an immutable struct
+
+     /* Cell */
+     use std::cell::Cell;
+
+     #[derive(Debug)]
+     struct Car {
+         company: String,
+         model: String,
+         for_sale: Cell<bool>,
+     }
+
+     let seat_leon = Car {
+         company: "Seat".to_string(),
+         model: "Leon".to_string(),
+         for_sale: Cell::new(true),
+     };
+
+     assert!(seat_leon.for_sale.get());
+
+     seat_leon.for_sale.set(false);
+
+     assert!(!seat_leon.for_sale.get());
+
+     /* RefCell */
+     // Same as Cell but adds exrta methods
+     // .borrow(), .bottom_mut() etc
+
+
+     /* Mutex */
+     // Stands for Mutual Exclusion
+     // safe because it only lets one process change it at a time
+     use std::sync::Mutex;
+
+     let my_mutex = Mutex::new(5);
+
+     let mut mutex_changer = my_mutex.lock().unwrap(); // lock() returns a LockResult so we can unwrap it
+
+     *mutex_changer = 6;
+
+     // my_mutex still locked, until the MutexGuard goes out of scope
+     // can be done with a code block or std::mem::drop(mutex_changer)
+
+     drop(mutex_changer);
+
+     // If Mutex is locked and another lock() is called the program will wait
+     // can use try_lock() which will try once and give up otherwise, returns TryLockResult
+     // Will fail with unwrap if it's locked
+
+     // Can also do shorthand
+     *my_mutex.lock().unwrap() = 7;
+
+
+     /* RwLock */
+     // Read Write Lock
+     // has read(), write()
+     // many read()s are okay but only a single write()
+     // When you write() while it's being read() the program will wait
+
+     use std::sync::RwLock;
+
+     let my_rwlock = RwLock::new(5);
+
+     println!("{:?}", my_rwlock.read().unwrap());
+
+     let mut write_rwlock = my_rwlock.write().unwrap();
+     *write_rwlock = 6;
+
+     drop(write_rwlock);
+
+     println!("{:?}", my_rwlock.read().unwrap());
+
+     // There is also try_read() and try_write()
+
+
+     /* Cow */
+     // Clone or Write
+     // Lets you return &str if you don't need String and String if you need it
+     // same with other elements such as arrays/vecs
+     // Can be a return type which automatically decides if it should be borrowed or owned
+     // fn mod(input) -> Cow<'static, str> { will return either &str or String
+     // has methods into_owned(), into_borrowed()
 }
 
 fn parse_str(input: &str) -> Result<i32, std::num::ParseIntError> {
