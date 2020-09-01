@@ -551,6 +551,55 @@ fn main() {
      // Can be a return type which automatically decides if it should be borrowed or owned
      // fn mod(input) -> Cow<'static, str> { will return either &str or String
      // has methods into_owned(), into_borrowed()
+
+
+     /* Type aliases */
+     // giving a new name to another type
+     type SignedIntVec = Vec<i32>;
+
+     let int_vec: SignedIntVec = vec![1, 2, 3];
+
+     let squared_vec = int_vec
+         .iter()
+         .map(|x| x * x)
+         .collect::<SignedIntVec>();
+     println!("{:?}", squared_vec);
+
+     // Can also create an actual type that wraps a different type:
+     // struct File(String)
+
+
+     /* Importing and renaming inside a function */
+     // usually use X::y::{T, U}
+
+     // can also do: use X::y::*
+     // or rename with as keyword
+
+
+     /* The todo! macro */
+     // for when you want rust to shut up
+     // can also use unimplemented!()
+
+     /*
+     fn return_thing() -> Result<i32, String> {
+         todo!();
+     }
+     */
+
+
+     /* Rc */
+     // Reference counter
+     // lets you have more than one owner and keeps track of who has ownership
+     // variables disappear when number of owners is 0
+     use std::rc::Rc;
+
+     let string: Rc<String> = Rc::new("Hello there".to_string());
+
+     let owner1 = string.clone();
+     let owner2 = string.clone();
+     println!("string has {} owners", Rc::strong_count(&string));
+     print_debug(owner1);
+     print_debug(owner2);
 }
 
 fn parse_str(input: &str) -> Result<i32, std::num::ParseIntError> {
