@@ -1,6 +1,12 @@
 use std::cmp::min;
 
+static mut TOTAL: i32 = 0;
+
 fn set_partition(c: &[i32], k: i32, d: i32) -> i32 {
+    unsafe {
+        TOTAL = TOTAL + 1;
+    }
+
     let n = c.len() as i32;
 
     if k == n {
@@ -14,7 +20,11 @@ fn set_partition(c: &[i32], k: i32, d: i32) -> i32 {
 }
 
 fn main() {
-    let set = [17, 20, 10, 3];
+    let set = [3, 1, 4, 2, 2, 1];
 
     println!("Set Partition Min: {}", set_partition(&set, 0, 0));
+
+    unsafe {
+        println!("{}", TOTAL + 1);
+    }
 }
